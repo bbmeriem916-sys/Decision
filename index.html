@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            --primary: #6c5ce7;
             --secondary: #00cec9;
             --danger: #ff7675;
             --glass: rgba(255, 255, 255, 0.1);
@@ -127,6 +128,7 @@
         }
 
         .decide-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(108, 92, 231, 0.5); }
+
         #resultArea {
             margin-top: 30px;
             display: none;
@@ -232,3 +234,50 @@
         // المعطيات (1 للخيارة الأول، 2 للثاني) والأوزان
         const data = [
             { winner: document.getElementById("v_price").value, weight: parseInt(document.getElementById("w_price").value), label: "التكلفة" },
+            { winner: document.getElementById("v_time").value, weight: parseInt(document.getElementById("w_time").value), label: "الوقت" },
+            { winner: document.getElementById("v_happy").value, weight: parseInt(document.getElementById("w_happy").value), label: "الراحة النفسية" }
+        ];
+
+        let score1 = 0;
+        let score2 = 0;
+        let reasons = [];
+
+        data.forEach(item => {
+            if(item.winner === "1") {
+                score1 += item.weight;
+                reasons.push(`تفوق <b>${op1}</b> في معيار <b>${item.label}</b> (بثقل ${item.weight}%)`);
+            } else {
+                score2 += item.weight;
+                reasons.push(`تفوق <b>${op2}</b> في معيار <b>${item.label}</b> (بثقل ${item.weight}%)`);
+            }
+        });
+
+        const resultArea = document.getElementById("resultArea");
+        const winnerName = document.getElementById("winnerName");
+        const analysis = document.getElementById("analysis");
+
+        resultArea.style.display = "block";
+        
+        if (score1 === score2) {
+            winnerName.innerText = "🤝 تعادل منطقي!";
+            analysis.innerHTML = "كلا الخيارين متساويان تماماً في النقاط بناءً على أوزانك. ربما عليك تجربة القرعة!";
+        } else {
+            const finalWinner = score1 > score2 ? op1 : op2;
+            const diff = Math.abs(score1 - score2);
+            winnerName.innerText = "✅ القرار الأرجح: " + finalWinner;
+            
+            analysis.innerHTML = `
+                لقد حصل <b>${finalWinner}</b> على مجموع نقاط <b>${Math.max(score1, score2)}</b> مقابل <b>${Math.min(score1, score2)}</b>.<br><br>
+                <b>تحليل الأسباب:</b><br>
+                <ul>${reasons.map(r => `<li>${r}</li>`).join('')}</ul>
+                <p>بناءً على هذا، ننصحك بالتوجه نحو <b>${finalWinner}</b> بفارق ثقة يبلغ ${diff} نقطة.</p>
+            `;
+        }
+        
+        // التمرير التلقائي للنتيجة
+        resultArea.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
