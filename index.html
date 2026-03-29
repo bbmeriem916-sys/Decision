@@ -3,250 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decision Matrix Pro | مساعد القرار الذكي</title>
+    <title>Decision Engine Pro | محرك القرارات الذكي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6c5ce7;
-            --secondary: #00cec9;
-            --bg: #0f0c29;
-            --glass: rgba(255, 255, 255, 0.1);
+            --feminine: #ff75c3; /* وردي أنيق */
+            --masculine: #00d2ff; /* أزرق سماوي قوي */
+            --deep: #2d3436;
+            --glass: rgba(255, 255, 255, 0.12);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            transition: all 0.3s ease;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background: #0f0c29;
             color: white;
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
+            overflow-x: hidden;
             padding: 20px;
+        }
+
+        /* حركات مائية في الخلفية */
+        .ocean {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: rise 10s infinite ease-in;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            50% { opacity: 0.3; }
+            100% { transform: translateY(-120vh) scale(1.5); opacity: 0; }
         }
 
         .container {
             background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
-            padding: 30px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 25px;
             width: 100%;
-            max-width: 550px; /* عرض مالي ومناسب للهواتف */
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            max-width: 550px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            z-index: 10;
         }
 
         h1 {
             text-align: center;
-            font-size: 1.8rem;
-            color: var(--secondary);
+            background: linear-gradient(90deg, var(--feminine), var(--masculine));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             margin-bottom: 25px;
         }
 
-        .input-section {
-            display: flex;
-            flex-direction: column; /* عمودي للهاتف */
-            gap: 12px;
-            margin-bottom: 30px;
-        }
-
-        /* تحويله لأفقي في الشاشات الواسعة */
-        @media (min-width: 480px) {
-            .input-section { flex-direction: row; }
-        }
+        @media (min-width: 480px) { .input-group { flex-direction: row; } }
 
         input[type="text"] {
             flex: 1;
             padding: 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            border: none;
+            background: rgba(0,0,0,0.4);
             color: white;
             text-align: center;
             font-size: 1rem;
+            border-bottom: 2px solid var(--masculine);
         }
 
-        .criteria-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 15px;
+        input[id="op1"] { border-bottom-color: var(--feminine); }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 20px;
             margin-bottom: 15px;
-            border-right: 5px solid var(--primary);
+            border-right: 4px solid var(--masculine);
         }
 
-        .criteria-header {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+        .card:nth-child(odd) { border-right-color: var(--feminine); }
 
         select {
             width: 100%;
             padding: 10px;
-            border-radius: 8px;
-            background: #2d3436;
+            margin-top: 10px;
+            border-radius: 10px;
+            background: #1e272e;
             color: white;
             border: none;
             cursor: pointer;
         }
 
-        .weight-label {
+        .weight-ui {
+            margin-top: 10px;
             display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--secondary);
-            margin-bottom: 8px;
+            align-items: center;
+            gap: 10px;
         }
 
-        input[type="range"] {
+        input[type="range"] { flex: 1; accent-color: var(--masculine); }
+
+        .btn-decide {
             width: 100%;
-            accent-color: var(--secondary);
-        }
-
-        .decide-btn {
-            width: 100%;
-            padding: 18px;
-            border-radius: 15px;
-            border: none;
-            background: linear-gradient(90deg, var(--primary), #8e44ad);
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            margin-top: 10px;
-        }
-
-        .decide-btn:active { transform: scale(0.98); }
-
-        #resultArea {
-            margin-top: 30px;
             padding: 20px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            display: none;
-            text-align: center;
-            border: 1px dashed var(--secondary);
+            border-radius: 20px;
+            border: none;
+            background: linear-gradient(45deg, var(--feminine), var(--masculine));
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 117, 195, 0.3);
         }
 
-        #winnerName {
-            display: block;
-            font-size: 1.4rem;
-            color: var(--secondary);
-            margin-top: 10px;
-            font-weight: bold;
+        .btn-decide:hover { transform: scale(1.02); }
+
+        /* منطقة النتائج الاحترافية */
+        #resultBox {
+            margin-top: 25px;
+            display: none;
+            animation: fadeIn 0.8s ease;
         }
+
+        .result-header {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid var(--secondary);
+        }
+
+        .report-section {
+            margin-top: 15px;
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .tag { padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; margin-right: 5px; }
+        .tag-pro { background: #00b894; }
+        .tag-con { background: #d63031; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
+<div class="ocean" id="ocean"></div>
+
 <div class="container">
-    <h1>🧠 مساعد القرار الذكي</h1>
-
-    <div class="input-section">
-        <input type="text" id="op1" placeholder="الخيار الأول">
-        <input type="text" id="op2" placeholder="الخيار الثاني">
+    <h1>✨ محرك القرارات الذكي</h1>
+    
+    <div class="input-group">
+        <input type="text" id="op1" placeholder="الخيار الأول (مثلاً: وظيفة A)">
+        <input type="text" id="op2" placeholder="الخيار الثاني (مثلاً: وظيفة B)">
     </div>
 
-    <div class="criteria-card">
-        <div class="criteria-header">
-            <span>💰 الميزانية والتكلفة</span>
-            <select id="v_price">
-                <option value="1">الخيار الأول أفضل (أوفر)</option>
-                <option value="2">الخيار الثاني أفضل (أوفر)</option>
-            </select>
+    <div class="card">
+        <label>💰 التكلفة والميزانية</label>
+        <select id="v_price">
+            <option value="1">الخيار الأول أوفر</option>
+            <option value="2">الخيار الثاني أوفر</option>
+        </select>
+        <div class="weight-ui">
+            <span>الأهمية:</span>
+            <input type="range" id="w_price" min="1" max="100" value="50">
         </div>
-        <div class="weight-label"><span>أهمية السعر</span> <span id="w_price_val">50%</span></div>
-        <input type="range" id="w_price" min="1" max="100" value="50" oninput="document.getElementById('w_price_val').innerText = this.value + '%'">
     </div>
 
-    <div class="criteria-card" style="border-right-color: var(--secondary);">
-        <div class="criteria-header">
-            <span>⏱️ توفير الوقت</span>
-            <select id="v_time">
-                <option value="1">الخيار الأول أسرع</option>
-                <option value="2">الخيار الثاني أسرع</option>
-            </select>
+    <div class="card">
+        <label>⏱️ الوقت والجهد</label>
+        <select id="v_time">
+            <option value="1">الخيار الأول أسرع</option>
+            <option value="2">الخيار الثاني أسرع</option>
+        </select>
+        <div class="weight-ui">
+            <span>الأهمية:</span>
+            <input type="range" id="w_time" min="1" max="100" value="50">
         </div>
-        <div class="weight-label"><span>أهمية الوقت</span> <span id="w_time_val">50%</span></div>
-        <input type="range" id="w_time" min="1" max="100" value="50" oninput="document.getElementById('w_time_val').innerText = this.value + '%'">
     </div>
 
-    <div class="criteria-card" style="border-right-color: #ff7675;">
-        <div class="criteria-header">
-            <span>😊 الراحة النفسية</span>
-            <select id="v_happy">
-                <option value="1">الخيار الأول يريحني أكثر</option>
-                <option value="2">الخيار الثاني يريحني أكثر</option>
-            </select>
+    <div class="card">
+        <label>💖 الرضا والشعور النفسي</label>
+        <select id="v_happy">
+            <option value="1">الخيار الأول مريح أكثر</option>
+            <option value="2">الخيار الثاني مريح أكثر</option>
+        </select>
+        <div class="weight-ui">
+            <span>الأهمية:</span>
+            <input type="range" id="w_happy" min="1" max="100" value="50">
         </div>
-        <div class="weight-label"><span>أهمية السعادة</span> <span id="w_happy_val">50%</span></div>
-        <input type="range" id="w_happy" min="1" max="100" value="50" oninput="document.getElementById('w_happy_val').innerText = this.value + '%'">
     </div>
 
-    <button class="decide-btn" onclick="calculateDecision()">🎯 اتخاذ القرار النهائي</button>
+    <button class="btn-decide" onclick="generateDecision()">🎯 اتخاذ القرار وتحليل الأسباب</button>
 
-    <div id="resultArea">
-        <span>النتيجة المقترحة:</span>
-        <span id="winnerName"></span>
+    <div id="resultBox">
+        <div class="result-header">
+            <div id="confidenceMeter" style="font-size: 0.8rem; color: var(--masculine)"></div>
+            <h2 id="winnerTitle" style="color: var(--feminine)"></h2>
+        </div>
+        
+        <div class="report-section">
+            <strong>📋 التقرير التحليلي:</strong>
+            <p id="logicReason" style="margin: 10px 0;"></p>
+            <div id="prosCons"></div>
+        </div>
     </div>
 </div>
 
 <script>
-    // التأكد من تعريف الدالة بشكل صحيح
-    function calculateDecision() {
-        console.log("جاري حساب القرار...");
-        
-        // جلب المدخلات
-        const op1 = document.getElementById("op1").value || "الخيار 1";
-        const op2 = document.getElementById("op2").value || "الخيار 2";
-
-        // جلب الاختيارات (أي خيار فاز في كل معيار)
-        const pWinner = document.getElementById("v_price").value;
-        const tWinner = document.getElementById("v_time").value;
-        const hWinner = document.getElementById("v_happy").value;
-
-        // جلب الأوزان
-        const pWeight = parseInt(document.getElementById("w_price").value);
-        const tWeight = parseInt(document.getElementById("w_time").value);
-        const hWeight = parseInt(document.getElementById("w_happy").value);
-
-        let score1 = 0;
-        let score2 = 0;
-
-        // الحساب المنطقي
-        if(pWinner === "1") score1 += pWeight; else score2 += pWeight;
-        if(tWinner === "1") score1 += tWeight; else score2 += tWeight;
-        if(hWinner === "1") score1 += hWeight; else score2 += hWeight;
-
-        // إظهار النتائج بصرياً
-        const resArea = document.getElementById("resultArea");
-        const winName = document.getElementById("winnerName");
-
-        resArea.style.display = "block";
-        
-        if (score1 > score2) {
-            winName.innerText = op1;
-        } else if (score2 > score1) {
-            winName.innerText = op2;
-        } else {
-            winName.innerText = "تعادل! كلاهما مناسب.";
+    // إنشاء فقاعات الماء خلف الكواليس
+    function createBubbles() {
+        const ocean = document.getElementById('ocean');
+        for (let i = 0; i < 15; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 60 + 10 + 'px';
+            bubble.style.width = size;
+            bubble.style.height = size;
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDelay = Math.random() * 8 + 's';
+            bubble.style.animationDuration = Math.random() * 5 + 7 + 's';
+            ocean.appendChild(bubble);
         }
-
-        // تمرير تلقائي للنتيجة
-        resArea.scrollIntoView({ behavior: 'smooth' });
     }
+    createBubbles();
 
-    // لضمان استدعاء الدالة من الزر في كل المتصفحات
-    window.calculateDecision = calculateDecision;
+    function generateDecision() {
+        const op1 = document.getElementById("op1").value || "الخيار الأول";
+        const op2 = document.getElementById("op2").value || "الخيار الثاني";
+
+        const criteria = [
+            { id: 'price', label: 'التكلفة', win: document.getElementById("v_price").value },
+            { id: 'time', label: 'الوقت', win: document.getElementById("v_time").value },
+            { id: 'happy', label: 'الراحة النفسية', win: document.getElementById("v_happy").value }
+        ];
+
+        let s1 = 0, s2 = 0;
+        let pros1 = [], pros2 = [];
+
+        criteria.forEach(c => {
+            const weight = parseInt(document.getElementById(`w_${c.id}`).value);
+            if(c.win === "1") {
+                s1 += weight;
+                pros1.push(c.label);
+            } else {
+                s2 += weight;
+                pros2.push(c.label);
+            }
+        });
+
+        const resBox = document.getElementById("resultBox");
+        const winnerTitle = document.getElementById("winnerTitle");
+        const logicReason = document.getElementById("logicReason");
+        const prosCons = document.getElementById("prosCons");
+        const confidenceMeter = document.getElementById("confidenceMeter");
+
+        resBox.style.display = "block";
+        
+        const winner = s1 >= s2 ? op1 : op2;
+        const loser = s1 >= s2 ? op2 : op1;
+        const winPros = s1 >= s2 ? pros1 : pros2;
+        const loserPros = s1 >= s2 ? pros2 : pros1;
+
+        winnerTitle.innerText = "🏆 القرار المقترح: " + winner;
+        confidenceMeter.innerText = `درجة الثقة بالقرار: ${Math.abs(s1-s2)} وحدة منطقية`;
+        
+        logicReason.innerHTML = `تم اختيار <b>${winner}</b> لأنه تفوق في المعايير التي أعطيتها أهمية كبرى، خاصة معيار (<b>${winPros.join(' و ')}</b>).`;
+
+        prosCons.innerHTML = `
+            <div style="margin-top:10px">
+                <span class="tag tag-pro">إيجابيات ${winner}:</span> ${winPros.join(' - ')} <br>
+                <span class="tag tag-con">نقاط ضعف ${winner}:</span> ${loserPros.length > 0 ? loserPros.join(' - ') : 'لا يوجد'}
+            </div>
+        `;
+
+        resBox.scrollIntoView({ behavior: 'smooth' });
+    }
 </script>
 
 </body>
