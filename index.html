@@ -3,58 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decision Matrix Pro | مصفوفة القرار الذكية</title>
+    <title>Decision Matrix Pro | مساعد القرار الذكي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6c5ce7;
             --secondary: #00cec9;
-            --danger: #ff7675;
+            --bg: #0f0c29;
             --glass: rgba(255, 255, 255, 0.1);
-            --text: #ffffff;
         }
 
-        * { box-sizing: border-box; transition: all 0.3s ease; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: var(--text);
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            margin: 0;
+            align-items: flex-start;
             padding: 20px;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         .container {
             background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 25px;
-            padding: 40px;
+            padding: 30px;
             width: 100%;
-            max-width: 650px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            max-width: 550px; /* عرض مالي ومناسب للهواتف */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
 
-        h1 { text-align: center; font-size: 2rem; margin-bottom: 10px; color: var(--secondary); }
-        .subtitle { text-align: center; opacity: 0.8; margin-bottom: 30px; font-size: 0.9rem; }
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 25px;
+        }
 
         .input-section {
             display: flex;
-            gap: 15px;
+            flex-direction: column; /* عمودي للهاتف */
+            gap: 12px;
             margin-bottom: 30px;
+        }
+
+        /* تحويله لأفقي في الشاشات الواسعة */
+        @media (min-width: 480px) {
+            .input-section { flex-direction: row; }
         }
 
         input[type="text"] {
@@ -62,31 +67,30 @@
             padding: 15px;
             border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.3);
             color: white;
-            font-size: 1rem;
             text-align: center;
+            font-size: 1rem;
         }
 
-        input:focus { border-color: var(--secondary); outline: none; background: rgba(0,0,0,0.4); }
-
         .criteria-card {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 15px;
-            border-right: 4px solid var(--primary);
+            border-right: 5px solid var(--primary);
         }
 
         .criteria-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 10px;
             margin-bottom: 15px;
         }
 
         select {
-            padding: 8px 15px;
+            width: 100%;
+            padding: 10px;
             border-radius: 8px;
             background: #2d3436;
             color: white;
@@ -94,77 +98,58 @@
             cursor: pointer;
         }
 
-        .weight-box {
-            margin-top: 10px;
-        }
-
         .weight-label {
             display: flex;
             justify-content: space-between;
             font-size: 0.8rem;
-            margin-bottom: 5px;
             color: var(--secondary);
+            margin-bottom: 8px;
         }
 
         input[type="range"] {
             width: 100%;
-            height: 5px;
-            border-radius: 5px;
             accent-color: var(--secondary);
         }
 
         .decide-btn {
             width: 100%;
             padding: 18px;
-            margin-top: 20px;
             border-radius: 15px;
             border: none;
-            background: linear-gradient(90deg, var(--primary), #a29bfe);
+            background: linear-gradient(90deg, var(--primary), #8e44ad);
             color: white;
-            font-weight: bold;
             font-size: 1.2rem;
+            font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            margin-top: 10px;
         }
 
-        .decide-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(108, 92, 231, 0.5); }
+        .decide-btn:active { transform: scale(0.98); }
 
         #resultArea {
             margin-top: 30px;
-            display: none;
-            padding: 25px;
-            border-radius: 15px;
+            padding: 20px;
             background: rgba(255,255,255,0.1);
-            animation: slideUp 0.5s ease-out;
+            border-radius: 15px;
+            display: none;
+            text-align: center;
+            border: 1px dashed var(--secondary);
         }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .winner-tag {
-            font-size: 1.5rem;
-            color: var(--secondary);
-            font-weight: bold;
+        #winnerName {
             display: block;
-            margin-bottom: 10px;
-        }
-
-        .analysis-text { font-size: 0.95rem; line-height: 1.6; color: #dfe6e9; }
-        
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            margin-left: 5px;
-            background: var(--primary);
+            font-size: 1.4rem;
+            color: var(--secondary);
+            margin-top: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🧠 Decision Matrix Pro</h1>
-    <p class="subtitle">قم بمقارنة الخيارات بناءً على أولوياتك الخاصة</p>
+    <h1>🧠 مساعد القرار الذكي</h1>
 
     <div class="input-section">
         <input type="text" id="op1" placeholder="الخيار الأول">
@@ -175,108 +160,93 @@
         <div class="criteria-header">
             <span>💰 الميزانية والتكلفة</span>
             <select id="v_price">
-                <option value="1">الخيار الأول أفضل</option>
-                <option value="2">الخيار الثاني أفضل</option>
+                <option value="1">الخيار الأول أفضل (أوفر)</option>
+                <option value="2">الخيار الثاني أفضل (أوفر)</option>
             </select>
         </div>
-        <div class="weight-box">
-            <div class="weight-label"><span>أهمية السعر بالنسبة لك</span> <span id="w_price_val">50%</span></div>
-            <input type="range" id="w_price" min="1" max="100" value="50" oninput="updateVal('w_price')">
-        </div>
+        <div class="weight-label"><span>أهمية السعر</span> <span id="w_price_val">50%</span></div>
+        <input type="range" id="w_price" min="1" max="100" value="50" oninput="document.getElementById('w_price_val').innerText = this.value + '%'">
     </div>
 
-    <div class="criteria-card" style="border-right-color: #fdcb6e;">
+    <div class="criteria-card" style="border-right-color: var(--secondary);">
         <div class="criteria-header">
-            <span>⏱️ توفير الوقت والجهد</span>
+            <span>⏱️ توفير الوقت</span>
             <select id="v_time">
-                <option value="1">الخيار الأول أفضل</option>
-                <option value="2">الخيار الثاني أفضل</option>
+                <option value="1">الخيار الأول أسرع</option>
+                <option value="2">الخيار الثاني أسرع</option>
             </select>
         </div>
-        <div class="weight-box">
-            <div class="weight-label"><span>مدى استعجالك للقرار</span> <span id="w_time_val">50%</span></div>
-            <input type="range" id="w_time" min="1" max="100" value="50" oninput="updateVal('w_time')">
-        </div>
+        <div class="weight-label"><span>أهمية الوقت</span> <span id="w_time_val">50%</span></div>
+        <input type="range" id="w_time" min="1" max="100" value="50" oninput="document.getElementById('w_time_val').innerText = this.value + '%'">
     </div>
 
     <div class="criteria-card" style="border-right-color: #ff7675;">
         <div class="criteria-header">
-            <span>😊 الرضا النفسي والسعادة</span>
+            <span>😊 الراحة النفسية</span>
             <select id="v_happy">
-                <option value="1">الخيار الأول أفضل</option>
-                <option value="2">الخيار الثاني أفضل</option>
+                <option value="1">الخيار الأول يريحني أكثر</option>
+                <option value="2">الخيار الثاني يريحني أكثر</option>
             </select>
         </div>
-        <div class="weight-box">
-            <div class="weight-label"><span>أهمية شعورك الداخلي</span> <span id="w_happy_val">50%</span></div>
-            <input type="range" id="w_happy" min="1" max="100" value="50" oninput="updateVal('w_happy')">
-        </div>
+        <div class="weight-label"><span>أهمية السعادة</span> <span id="w_happy_val">50%</span></div>
+        <input type="range" id="w_happy" min="1" max="100" value="50" oninput="document.getElementById('w_happy_val').innerText = this.value + '%'">
     </div>
 
     <button class="decide-btn" onclick="calculateDecision()">🎯 اتخاذ القرار النهائي</button>
 
     <div id="resultArea">
-        <span class="badge">النتيجة النهائية</span>
-        <span id="winnerName" class="winner-tag"></span>
-        <div id="analysis" class="analysis-text"></div>
+        <span>النتيجة المقترحة:</span>
+        <span id="winnerName"></span>
     </div>
 </div>
 
 <script>
-    function updateVal(id) {
-        document.getElementById(id + '_val').innerText = document.getElementById(id).value + '%';
-    }
-
+    // التأكد من تعريف الدالة بشكل صحيح
     function calculateDecision() {
-        const op1 = document.getElementById("op1").value || "الخيار الأول";
-        const op2 = document.getElementById("op2").value || "الخيار الثاني";
+        console.log("جاري حساب القرار...");
+        
+        // جلب المدخلات
+        const op1 = document.getElementById("op1").value || "الخيار 1";
+        const op2 = document.getElementById("op2").value || "الخيار 2";
 
-        // المعطيات (1 للخيارة الأول، 2 للثاني) والأوزان
-        const data = [
-            { winner: document.getElementById("v_price").value, weight: parseInt(document.getElementById("w_price").value), label: "التكلفة" },
-            { winner: document.getElementById("v_time").value, weight: parseInt(document.getElementById("w_time").value), label: "الوقت" },
-            { winner: document.getElementById("v_happy").value, weight: parseInt(document.getElementById("w_happy").value), label: "الراحة النفسية" }
-        ];
+        // جلب الاختيارات (أي خيار فاز في كل معيار)
+        const pWinner = document.getElementById("v_price").value;
+        const tWinner = document.getElementById("v_time").value;
+        const hWinner = document.getElementById("v_happy").value;
+
+        // جلب الأوزان
+        const pWeight = parseInt(document.getElementById("w_price").value);
+        const tWeight = parseInt(document.getElementById("w_time").value);
+        const hWeight = parseInt(document.getElementById("w_happy").value);
 
         let score1 = 0;
         let score2 = 0;
-        let reasons = [];
 
-        data.forEach(item => {
-            if(item.winner === "1") {
-                score1 += item.weight;
-                reasons.push(`تفوق <b>${op1}</b> في معيار <b>${item.label}</b> (بثقل ${item.weight}%)`);
-            } else {
-                score2 += item.weight;
-                reasons.push(`تفوق <b>${op2}</b> في معيار <b>${item.label}</b> (بثقل ${item.weight}%)`);
-            }
-        });
+        // الحساب المنطقي
+        if(pWinner === "1") score1 += pWeight; else score2 += pWeight;
+        if(tWinner === "1") score1 += tWeight; else score2 += tWeight;
+        if(hWinner === "1") score1 += hWeight; else score2 += hWeight;
 
-        const resultArea = document.getElementById("resultArea");
-        const winnerName = document.getElementById("winnerName");
-        const analysis = document.getElementById("analysis");
+        // إظهار النتائج بصرياً
+        const resArea = document.getElementById("resultArea");
+        const winName = document.getElementById("winnerName");
 
-        resultArea.style.display = "block";
+        resArea.style.display = "block";
         
-        if (score1 === score2) {
-            winnerName.innerText = "🤝 تعادل منطقي!";
-            analysis.innerHTML = "كلا الخيارين متساويان تماماً في النقاط بناءً على أوزانك. ربما عليك تجربة القرعة!";
+        if (score1 > score2) {
+            winName.innerText = op1;
+        } else if (score2 > score1) {
+            winName.innerText = op2;
         } else {
-            const finalWinner = score1 > score2 ? op1 : op2;
-            const diff = Math.abs(score1 - score2);
-            winnerName.innerText = "✅ القرار الأرجح: " + finalWinner;
-            
-            analysis.innerHTML = `
-                لقد حصل <b>${finalWinner}</b> على مجموع نقاط <b>${Math.max(score1, score2)}</b> مقابل <b>${Math.min(score1, score2)}</b>.<br><br>
-                <b>تحليل الأسباب:</b><br>
-                <ul>${reasons.map(r => `<li>${r}</li>`).join('')}</ul>
-                <p>بناءً على هذا، ننصحك بالتوجه نحو <b>${finalWinner}</b> بفارق ثقة يبلغ ${diff} نقطة.</p>
-            `;
+            winName.innerText = "تعادل! كلاهما مناسب.";
         }
-        
-        // التمرير التلقائي للنتيجة
-        resultArea.scrollIntoView({ behavior: 'smooth' });
+
+        // تمرير تلقائي للنتيجة
+        resArea.scrollIntoView({ behavior: 'smooth' });
     }
+
+    // لضمان استدعاء الدالة من الزر في كل المتصفحات
+    window.calculateDecision = calculateDecision;
 </script>
 
 </body>
